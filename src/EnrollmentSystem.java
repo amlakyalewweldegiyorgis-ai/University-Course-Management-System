@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class EnrollmentSystem {
@@ -42,12 +43,24 @@ public class EnrollmentSystem {
 
     //    Day 09: Enrollment method
     public static void enroll(Student student, Course course) {
-        if (checkPrerequisites(student, course) & !selectedCourses.contains(course)) {
-            selectedCourses.add(course);
-            checkOut(student);
+        if (checkPrerequisites(student, course)){
+            if (!checkCourseRegistered(student, course)) {
+                selectedCourses.add(course);
+                checkOut(student);
+            } else {
+                System.out.println("The student has already registered this course, please select another course.");
+            }
         } else {
-            System.out.print("Sorry, you can't enroll this course, \n the course is not available \n or your prerequisite is not matched \n or you have already enrolled.");
+            System.out.print("Sorry, you can't enroll this course, your prerequisite is not matched.");
         }
+    }
+
+    private static boolean checkCourseRegistered(Student student, Course course) {
+        for (Course c : student.getCurrentCourse()){
+            if (Objects.equals(c.getCourseCode(), course.getCourseCode())){
+                return true;
+            }
+        } return false;
     }
 
 
