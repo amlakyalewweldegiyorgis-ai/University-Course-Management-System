@@ -1,5 +1,6 @@
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Menu {
@@ -96,12 +97,24 @@ public class Menu {
             try {
                 int select = sc.nextInt();
                 sc.nextLine();
-                return select;
+                if (checkIdDuplication(select)) {
+                    return select;
+                } else {
+                    System.out.println("Provided ID is not unique (already assigned), please, provide another value.");
+                }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please, use numbers.");
                 sc.nextLine();
             }
         }
+    }
+
+    private static boolean checkIdDuplication(int id) {
+        for (Student student : EnrollmentSystem.registeredStudents){
+            if (student.getId() == id){
+                return false;
+            }
+        } return true;
     }
 
 

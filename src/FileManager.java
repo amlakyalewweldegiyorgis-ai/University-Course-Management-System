@@ -7,7 +7,6 @@ public class FileManager {
     public static <T> void saveToFile(List<T> data, String fileName) {
         try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
             oos.writeObject(data);
-            System.out.println("File saved successfully on " + fileName);
         } catch (IOException e) {
             System.out.println("Error saving file " + fileName + e.getMessage());
         }
