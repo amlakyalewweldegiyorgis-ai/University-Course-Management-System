@@ -8,29 +8,16 @@ public class Student implements java.io.Serializable {
     private List<Course> completedCourses;
     private List<Course> currentCourse;
 
-
-    //    No-args constructor
-    public Student() {
+    // Student constructor
+    public Student(String fullName, int id,  String gender) {
+        this.fullName = fullName;
+        this.id = id;
+        this.gender = gender;
         this.completedCourses = new ArrayList<>();
         this.currentCourse = new ArrayList<>();
     }
 
-
-    public Student(String fullName, int id,  String gender) {
-        this();
-        this.fullName = fullName;
-        this.id = id;
-        this.gender = gender;
-    }
-
-    public void addCompletedCourse(Course course) {
-        this.completedCourses.add(course);
-    }
-
-    public void addCurrentCourses(Course course) {
-        this.currentCourse.add(course);
-    }
-
+    // To string
     public String toString() {
         return String.format("  %-20s  %-12s    %-8s", this.getFullName(), this.getId(), this.getGender());
     }
@@ -56,7 +43,7 @@ public class Student implements java.io.Serializable {
         return gender;
     }
 
-    //    setters
+    //    Setters
     public void setCompletedCourses(List<Course> completedCourses) {
         this.completedCourses = completedCourses;
     }
@@ -76,4 +63,14 @@ public class Student implements java.io.Serializable {
     public void setGender(String gender) {
         this.gender = gender;
     }
+
+    // Adders
+    public void addCompletedCourse(Course course) {
+        this.completedCourses.add(course);
+    }
+
+    public void addCurrentCourses(Course course) {
+        this.currentCourse.add(course);
+    }
+
 }

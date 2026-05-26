@@ -3,31 +3,26 @@ import java.util.List;
 
 public class Course implements java.io.Serializable {
 
-    //    Course private instance members
+    // Course private instance members
     private String courseName;
     private String courseCode;
     private double courseFee;
     private List<Course> prerequisite;
 
-    //    No-args constructor
-    public Course() {
-        this.prerequisite = new ArrayList<>();
-    }
-
-    //    Course constructor
+    // Course constructor
     public Course(String courseName, String courseCode, double courseFee) {
-        this();
         this.courseName = courseName;
         this.courseCode = courseCode;
         this.courseFee = courseFee;
+        this.prerequisite = new ArrayList<>();
     }
 
-    // Helper methods
+    // To string
     public String toString() {
         return String.format("  %-20s %-12s %-8s", this.getCourseName(), this.getCourseCode(), this.getCourseFee());
     }
 
-    //    getters
+    // Getters
     public String getCourseName() {
         return this.courseName;
     }
@@ -48,7 +43,7 @@ public class Course implements java.io.Serializable {
         return this.prerequisite;
     }
 
-    //    setters
+    // Setters
     public void setPrerequisite(List<Course> prerequisite) {
         this.prerequisite = prerequisite;
     }
@@ -65,7 +60,7 @@ public class Course implements java.io.Serializable {
         this.courseFee = courseFee;
     }
 
-    //    Helper method to update the course
+    // Helper method to update the course
     public void updateCourse(String courseName, String courseCode, double courseFee) {
         this.courseName = courseName;
         this.courseCode = courseCode;

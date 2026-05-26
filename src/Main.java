@@ -85,7 +85,9 @@ void main() {
     }
 
 //    Homework:
-//    1. Fix duplicate registration
-//    2. Only display if there is an error while saving the file
-//    3. Arrange the methods in order and using comments
+//    1. Fix duplicate registration.
+//    2. Only display if there is an error while saving the file.
+//    3. Arrange the methods in order and using comments.
+//       . File Manager, Student, Course, Payment, EnrollmentSystem,
+//    4. Connect to the Database.
 }

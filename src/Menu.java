@@ -6,6 +6,7 @@ import java.util.Scanner;
 public class Menu {
     static Scanner sc = new Scanner(System.in);
 
+    // Main Menu
     public static int mainMenu() {
         System.out.println("\uD83D\uDCC1 _________________________________________________________ \uD83D\uDCC1");
         System.out.println("\uD83D\uDDD2\uFE0F Main Menu:");
@@ -18,9 +19,8 @@ public class Menu {
     }
 
 
-
     //    --------------------------------------------------------------------------------------------
-//    Managing students:
+    // Students Management Menu:
     public static int manageStudentsMenu() {
         System.out.println("*** ------------------ Managing Students ------------------ ***");
         System.out.println("    1. Register new student");
@@ -32,7 +32,6 @@ public class Menu {
         System.out.print("* Please choose an option: ");
         return validateNumberChoice(6);
     }
-
 
     //  1  Registering new student:
     public static void registerNewStudent() {
@@ -53,7 +52,7 @@ public class Menu {
         System.out.println("\uD83C\uDF89 Student '" + student.getFullName() + "' has been registered successfully!");
     }
 
-//  Helper function for registering new student
+    // Helper methods for registering new student
     public static String validateFullName() {
         while (true) {
             String fullName = sc.nextLine();
@@ -117,8 +116,7 @@ public class Menu {
         } return true;
     }
 
-
-    // 2 Enroll student
+    // 2 Enrolling student
     public static void enrollStudent() {
         Scanner input = new Scanner(System.in);
         System.out.println("*** ------------------ Enrolling Student ------------------ ***");
@@ -163,9 +161,8 @@ public class Menu {
         }
     }
 
-
     //  3 List registered students
-//    Handled by Menu.java
+    // Handled by Menu.java
 
     //  4  Remove registered student
     public static void removeRegisteredStudent() {
@@ -250,8 +247,11 @@ public class Menu {
     }
 
 
+
+
+
     //    --------------------------------------------------------------------------------------------
-//    Managing available courses:
+    // Courses Management Menu:
     public static int manageAvailableCoursesMenu() {
         System.out.println("*** ------------------ Managing Available Courses ------------------ ***");
         System.out.println("    1. Add new course");
@@ -265,8 +265,7 @@ public class Menu {
         return validateNumberChoice(7);
     }
 
-
-    //    Helper: add course
+    // Helper method to add course
     public static Course addCourse() {
         Scanner input = new Scanner(System.in);
 
@@ -281,7 +280,6 @@ public class Menu {
 
         return new Course(name, code, fee);
     }
-
 
     //  1  Add new course
     public static void addNewCourseMenu() {
@@ -329,7 +327,6 @@ public class Menu {
         }
     }
 
-
     // 3 Delete existing course
     public static void deleteExistingCourseMenu() {
         Scanner input = new Scanner(System.in);
@@ -355,7 +352,7 @@ public class Menu {
         Menu.listData(EnrollmentSystem.availableCourses, "#Available Courses . . . ", header, "No registered courses are found, please register.");
     }
 
-    //    4 Adding prerequisite
+    // 4 Adding prerequisite
     public static void addPrerequisiteMenu() {
         Scanner input = new Scanner(System.in);
         System.out.println("*** ------------------ Adding Prerequisite ------------------ ***");
@@ -379,8 +376,7 @@ public class Menu {
         }
     }
 
-
-    //    5 Show Prerequisite
+    // 5 Show Prerequisite
     public static void showPrerequisiteMenu() {
         Scanner input = new Scanner(System.in);
         System.out.println("*** ------------------ Showing Prerequisite ------------------ ***");
@@ -411,8 +407,11 @@ public class Menu {
     }
 
 
-//    --------------------------------------------------------------------------------------------
-//    Managing Payments:
+
+
+
+    //    --------------------------------------------------------------------------------------------
+    // Payments Management Menu:
     public static int managePaymentsMenu() {
         System.out.println("*** ------------------ Managing Payments ------------------ ***");
         System.out.println("    1. List Payment Slips");
@@ -421,7 +420,7 @@ public class Menu {
         return validateNumberChoice(2);
     }
 
-//    1 List payment slips
+    // 1 List payment slips
     public static void listPaymentSlips() {
         int i = 1;
         System.out.println("________________________________________________________");
@@ -438,13 +437,8 @@ public class Menu {
         }
     }
 
-//    2 Quit
-
-
-
-
-//    --------------------------------------------------------------------------------------------
-// Helper function
+    //    --------------------------------------------------------------------------------------------
+    // Helper function
     public static int validateNumberChoice(int options) {
         while (true) {
             try {
@@ -462,16 +456,13 @@ public class Menu {
         }
     }
 
-
     public static void exitNow() {
         System.exit(0);
     }
 
-    //    Lister function
     public static <T> void listData(List<T> container, String introPrompt, String headerPrompt, String errorPrompt) {
         if (container == null || container.isEmpty()) {
             System.out.println(errorPrompt);
-//            return false;
         } else {
             int i = 1;
             System.out.println("________________________________________________________");
@@ -483,7 +474,6 @@ public class Menu {
                 i++;
             }
             System.out.println("________________________________________________________");
-//                return true;
         }
     }
 

@@ -8,18 +8,15 @@ public class EnrollmentSystem {
     public static List<Course> availableCourses = new ArrayList<>();
     private static final List<Course> selectedCourses = new ArrayList<>();
 
-
-    //    Tempo testing code
+    // Tempo testing code
     public static void addAvailableCourse(Course course) {
         availableCourses.add(course);
     }
 
-
-    //    Add registered students
+    // Add registered students
     public static void addRegisteredStudent(Student student) {
         registeredStudents.add(student);
     }
-
 
     // Day 08 : writing helper method to check prerequisites
     private static boolean checkPrerequisites(Student student, Course course) {
@@ -39,9 +36,7 @@ public class EnrollmentSystem {
         return false;
     }
 
-
-
-    //    Day 09: Enrollment method
+    // Day 09: Enrollment method
     public static void enroll(Student student, Course course) {
         if (checkPrerequisites(student, course)){
             if (!checkCourseRegistered(student, course)) {
@@ -55,6 +50,7 @@ public class EnrollmentSystem {
         }
     }
 
+    // Helper to check for duplicate registration : Ch Not!
     private static boolean checkCourseRegistered(Student student, Course course) {
         for (Course c : student.getCurrentCourse()){
             if (Objects.equals(c.getCourseCode(), course.getCourseCode())){
@@ -62,7 +58,6 @@ public class EnrollmentSystem {
             }
         } return false;
     }
-
 
     // Day 10 : Fee calculation
     private static double totalFee() {
@@ -74,8 +69,7 @@ public class EnrollmentSystem {
         return totalFee;
     }
 
-
-    //    Day 11: Checkout method
+    // Day 11: Checkout method
     public static void checkOut(Student student) {
         Scanner input = new Scanner(System.in);
 
