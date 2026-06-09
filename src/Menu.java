@@ -48,6 +48,7 @@ public class Menu {
         int id = validateNumberChoiceForId();
 
         Student student = new Student(fullName, id, gender);
+        DatabaseManager.saveStudent(student);
         EnrollmentSystem.addRegisteredStudent(student);
         System.out.println("\uD83C\uDF89 Student '" + student.getFullName() + "' has been registered successfully!");
     }
