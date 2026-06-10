@@ -11,7 +11,7 @@ public class DatabaseManager {
             CREATE TABLE IF NOT EXISTS Students (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 full_name VARCHAR(100) NOT NULL,
-                student_id VARCHAR(50) UNIQUE NOT NULL,
+                student_id INTEGER UNIQUE NOT NULL,
                 gender VARCHAR(10) NOT NULL
             );
         """;
@@ -38,6 +38,33 @@ public class DatabaseManager {
              pst.setInt(2, st.getId());
              pst.setString(3, st.getGender());
              pst.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("❌ There is Database Error: " + e.getMessage());
+        }
+    }
+
+    public static void loadStudents() {
+        String sql = "SELECT full_name, student_id, gender FROM Students";
+
+        EnrollmentSystem.registeredStudents.clear();
+
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement pst = connection.prepareStatement(sql);
+             ResultSet rs = pst.executeQuery()) {
+
+            while (rs.next()) {
+
+                String name = rs.getString("full_name");
+                int id = rs.getInt("student_id");
+                String gender = rs.getString("gender");
+
+                Student student = new Student(name, id, gender);
+
+                EnrollmentSystem.registeredStudents.add(student);
+            }
+
+            System.out.println(EnrollmentSystem.registeredStudents.size() + "Students are loaded from Database.");
 
         } catch (SQLException e) {
             System.out.println("❌ There is Database Error: " + e.getMessage());
