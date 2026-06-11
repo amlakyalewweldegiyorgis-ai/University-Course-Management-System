@@ -6,7 +6,8 @@ public class Main{
         EnrollmentSystem.availableCourses = FileManager.loadFromFile("Courses.dat");
         EnrollmentSystem.registeredStudents = FileManager.loadFromFile("Students.dat");
         Payment.payments = FileManager.loadFromFile("Payments.dat");
-        DatabaseManager.initializeDatabase();
+        DatabaseManager.initializeTableStudentOnDatabase();
+        DatabaseManager.loadStudents();
 
 
 //    Dummy data to test the system -----------------------------------------
