@@ -2,28 +2,17 @@ public class Main{
 
     public static void main(String[] args) {
 
-//   Loading existing files
-        EnrollmentSystem.availableCourses = FileManager.loadFromFile("Courses.dat");
-        EnrollmentSystem.registeredStudents = FileManager.loadFromFile("Students.dat");
-        Payment.payments = FileManager.loadFromFile("Payments.dat");
+        // Initialize DB
+        DatabaseManager.initializeHelperTables();
         DatabaseManager.initializeTableStudentOnDatabase();
+        DatabaseManager.initializeTableCourseOnDatabase();
+
+        // Load from DB
         DatabaseManager.loadStudents();
+        DatabaseManager.loadCourses();
+        DatabaseManager.loadPrerequisites();
+        DatabaseManager.loadStudentEnrollments();
 
-
-//    Dummy data to test the system -----------------------------------------
-        if (EnrollmentSystem.availableCourses.isEmpty()) {
-            Course course1 = new Course("Java", "J12", 500);
-            Course course2 = new Course("HTML", "H21", 400);
-            Course course3 = new Course("React", "R001", 900);
-            Course course4 = new Course("JavaScript", "JS88", 500);
-            Course course5 = new Course("Css", "C90", 300);
-
-            EnrollmentSystem.addAvailableCourse(course1);
-            EnrollmentSystem.addAvailableCourse(course2);
-            EnrollmentSystem.addAvailableCourse(course3);
-            EnrollmentSystem.addAvailableCourse(course4);
-            EnrollmentSystem.addAvailableCourse(course5);
-        }
 //    -----------------------------------------
 
         System.out.println("\uD83D\uDDC3\uFE0F Welcome to University Course Management System \uD83D\uDDC3\uFE0F");
@@ -49,6 +38,8 @@ public class Main{
                     Menu.removeRegisteredStudent();
                     FileManager.saveToFile(EnrollmentSystem.registeredStudents, "Students.dat");
                 } else if (studentChoice == 5) {
+                    Menu.updateCourseStatusMenu();
+                } else if (studentChoice == 6) {
                     Menu.seeStudentsDetails();
                 }
 

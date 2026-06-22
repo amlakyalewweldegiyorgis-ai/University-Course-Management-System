@@ -46,7 +46,7 @@ public class EnrollmentSystem {
                 System.out.println("The student has already registered this course, please select another course.");
             }
         } else {
-            System.out.print("Sorry, you can't enroll this course, your prerequisite is not matched.");
+            System.out.print("Sorry, you can't enroll this course, your prerequisite is not matched.\n");
         }
     }
 
@@ -87,6 +87,7 @@ public class EnrollmentSystem {
 
                 for (Course c : selectedCourses) {
                     student.addCurrentCourses(c);
+                    DatabaseManager.saveEnrollment(student.getId(), c.getCourseCode(), "CURRENT");
                 }
 
                 System.out.println();

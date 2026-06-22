@@ -1,6 +1,5 @@
 import java.util.InputMismatchException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class Menu {
@@ -27,10 +26,11 @@ public class Menu {
         System.out.println("    2. Enroll student");
         System.out.println("    3. List registered students");
         System.out.println("    4. Remove registered student");
-        System.out.println("    5. See student's details");
-        System.out.println("    6. Quit");
+        System.out.println("    5. Update course status");
+        System.out.println("    6. See student's details");
+        System.out.println("    7. Quit");
         System.out.print("* Please choose an option: ");
-        return validateNumberChoice(6);
+        return validateNumberChoice(7);
     }
 
     //  1  Registering new student:
@@ -128,7 +128,7 @@ public class Menu {
             int chosenStudent = input.nextInt();
             input.nextLine();
 
-            System.out.println("Student " + chosenStudent + " is choosen . . . ");
+            System.out.println("Student " + chosenStudent + " is chosen . . . ");
             int j = 1;
 
             for (Student student :  EnrollmentSystem.registeredStudents) {
@@ -150,7 +150,7 @@ public class Menu {
         int chosenCourse = input.nextInt();
         input.nextLine();
 
-        System.out.println(chosenCourse + " is choosen . . . ");
+        System.out.println(chosenCourse + " is chosen . . . ");
         int j = 1;
 
         for (Course c :  EnrollmentSystem.availableCourses) {
@@ -176,20 +176,53 @@ public class Menu {
             int chosenStudent = input.nextInt();
             input.nextLine();
 
-            System.out.println(chosenStudent + " is choosen . . . ");
+            System.out.println(chosenStudent + " is chosen . . . ");
             int j = 1;
 
             for (Student student :  EnrollmentSystem.registeredStudents) {
                 if (j == chosenStudent) {
                     EnrollmentSystem.registeredStudents.remove(student);
-                    System.out.println("\uD83C\uDF89 Choosen student '" + j + "' has been removed, successfully!");
+                    DatabaseManager.removeStudentFromDatabase(student.getId());
+                    System.out.println("\uD83C\uDF89 Chosen student '" + j + "' has been removed, successfully!");
                     break;
                 }
                 j++;
             }
     }
 
-    // 5 See student's details
+    // 5 Update Course Status
+    public static void updateCourseStatusMenu() {
+        Scanner input = new Scanner(System.in);
+        System.out.println("*** ------------------ Updating Course Status for Registered Student ------------------ ***");
+
+        String student_list_header = String.format("    %-4s %-21s %-13s %-9s", "No.", "Full Name", "Id", "Gender");
+        Menu.listData(EnrollmentSystem.registeredStudents, "#Registered Students . . .", student_list_header, "No registered students are found, please register.");
+        System.out.print("* Choose the student to update course status from the list: ");
+        int chosenStudent = input.nextInt();
+        input.nextLine();
+
+        System.out.println("Enter course code: ");
+        String chosenCourseCode = input.nextLine();
+        input.nextLine();
+
+        System.out.println("Enter new course status: ");
+        String chosenCourseStatus = input.nextLine();
+        input.nextLine();
+
+        int j = 1;
+
+        for (Student student :  EnrollmentSystem.registeredStudents) {
+            if (j == chosenStudent) {
+                DatabaseManager.updateCourseStatus(student.getId(), chosenCourseCode, chosenCourseStatus);
+                break;
+            }
+            j++;
+        }
+
+
+    }
+
+    // 6 See student's details
     public static void seeStudentsDetails() {
         Scanner input = new Scanner(System.in);
         System.out.println("*** ------------------ Showing Students Detail ------------------ ***");
@@ -200,7 +233,7 @@ public class Menu {
             int chosenStudent = input.nextInt();
             input.nextLine();
 
-            System.out.println("Student " + chosenStudent + " is choosen . . . ");
+            System.out.println("Student " + chosenStudent + " is chosen . . . ");
             int j = 1;
 
             for (Student student :  EnrollmentSystem.registeredStudents) {
@@ -215,19 +248,20 @@ public class Menu {
     private static void listCurrentCourses(Student student) {
         System.out.println("________________________________________________________");
         System.out.println("Name: " + student.getFullName() + "   Id:" + student.getId());
+        System.out.println("Currently Enrolled courses . . . ");
 
-        if (!student.getCurrentCourse().isEmpty()) {
+        if (student.getCurrentCourse().isEmpty()) {
+            System.out.println("      No Enrolled course list found.");
+            listTakenCourses(student);
+        } else {
             int i = 1;
 
-            System.out.println("Currently Enrolled courses . . . ");
             System.out.printf("    %-4s %-21s %-13s %-9s%n", "No.", "Course Name", "Code", "Fee");
             for (Course c : student.getCurrentCourse()) {
                 System.out.println("    " + i + ". " + c.toString());
                 i++;
             }
             listTakenCourses(student);
-        } else {
-            System.out.println("There is no detail to see.");
         }
 
     }
@@ -290,6 +324,7 @@ public class Menu {
 
         if (!EnrollmentSystem.availableCourses.contains(course)) {
             EnrollmentSystem.availableCourses.add(course);
+            DatabaseManager.saveCourse(course);
             System.out.println("\uD83C\uDF89 Course '" + course.getCourseName() + "' is added successfully!");
         } else {
             System.out.println("Course already exists");
@@ -306,7 +341,7 @@ public class Menu {
         int chosenCourse = input.nextInt();
         input.nextLine();
 
-        System.out.println(chosenCourse + " is choosen . . . ");
+        System.out.println(chosenCourse + " is chosen . . . ");
 
         System.out.print("    .Enter updated course name: ");
         String name = input.nextLine();
@@ -363,7 +398,7 @@ public class Menu {
         System.out.print("Choose the course you want to add prerequisite for (Use Number): ");
         int selectedCourse = input.nextInt();
 
-        System.out.println(selectedCourse + " is choosen . . . ");
+        System.out.println(selectedCourse + " is chosen . . . ");
         int j = 1;
 
         for (Course c :  EnrollmentSystem.availableCourses) {
@@ -477,5 +512,4 @@ public class Menu {
             System.out.println("________________________________________________________");
         }
     }
-
 }
