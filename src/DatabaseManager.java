@@ -284,10 +284,13 @@ public class DatabaseManager {
         }
     }
 
+
+
+
     public static void updateCourseStatus(int studentId, String courseCode, String newStatus) {
         String sql = "UPDATE Enrollments SET status = ? WHERE student_id = ? AND course_code = ?";
 
-        // 1. Update the permanent Database Storage
+        // 1. Update Database Storage permanently
         try (Connection connection = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement pst = connection.prepareStatement(sql)) {
 

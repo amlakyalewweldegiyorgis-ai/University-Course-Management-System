@@ -28,7 +28,7 @@ public class Student implements java.io.Serializable {
     }
 
     public List<Course> getCurrentCourse() {
-        return currentCourse;
+        return this.currentCourse;
     }
 
     public List<Course> getCompletedCourse() {

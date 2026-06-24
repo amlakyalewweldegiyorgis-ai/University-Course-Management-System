@@ -43,10 +43,10 @@ public class EnrollmentSystem {
                 selectedCourses.add(course);
                 checkOut(student);
             } else {
-                System.out.println("The student has already registered this course, please select another course.");
+                System.out.println("The student has already registered for " +  course + "course, please select another course.");
             }
         } else {
-            System.out.print("Sorry, you can't enroll this course, your prerequisite is not matched.\n");
+            System.out.print("Sorry, you can't enroll this " +  course + " course, your prerequisite is not matched.\n");
         }
     }
 

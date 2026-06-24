@@ -29,8 +29,6 @@ public class Main{
                     FileManager.saveToFile(EnrollmentSystem.registeredStudents, "Students.dat");
                 } else if (studentChoice == 2) {
                     Menu.enrollStudent();
-                    FileManager.saveToFile(EnrollmentSystem.registeredStudents, "Students.dat");
-                    FileManager.saveToFile(Payment.payments, "Payments.dat");
                 } else if (studentChoice == 3) {
                     String student_list_header = String.format("    %-4s %-21s %-13s %-9s", "No.", "Full Name", "Id", "Gender");
                     Menu.listData(EnrollmentSystem.registeredStudents, "#Registered Students . . .", student_list_header, "No registered students are found, please register.");

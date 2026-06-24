@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -141,25 +142,39 @@ public class Menu {
     }
 
     private static void enrollCourse(Student student) {
-        Scanner input = new Scanner(System.in);
-        System.out.println("*** ------------------ Selecting Course for student ------------------ ***");
+            Scanner input = new Scanner(System.in);
 
-        String header = String.format("    %-4s %-21s %-13s %-9s", "No.", "Course Name", "Code", "Fee");
-        Menu.listData(EnrollmentSystem.availableCourses, "#Available Courses . . . ", header, "No registered courses are found, please register.");
-        System.out.print("* Select the course to enroll from the list: ");
-        int chosenCourse = input.nextInt();
-        input.nextLine();
+            List<Course> tempCourses = new ArrayList<>();
+            boolean continue_enrollment = true;
 
-        System.out.println(chosenCourse + " is chosen . . . ");
-        int j = 1;
 
-        for (Course c :  EnrollmentSystem.availableCourses) {
-            if (j == chosenCourse) {
-                EnrollmentSystem.enroll(student, c);
-                break;
+            while (continue_enrollment) {
+                System.out.println("*** ------------------ Selecting Course for student ------------------ ***");
+                String header = String.format("    %-4s %-21s %-13s %-9s", "No.", "Course Name", "Code", "Fee");
+                Menu.listData(EnrollmentSystem.availableCourses, "#Available Courses . . . ", header, "No registered courses are found, please register.");
+                System.out.print("* Select the course to enroll from the list: ");
+                int chosenCourse = input.nextInt();
+                input.nextLine();
+
+                System.out.println(chosenCourse + " is chosen . . . ");
+                int j = 1;
+
+                for (Course c :  EnrollmentSystem.availableCourses) {
+                    if (j == chosenCourse) {
+                        tempCourses.add(c);
+                        System.out.print("Do you want to continue enrolling another course? [any key for Yes or n for No]: ");
+                        String choice = sc.nextLine();
+                        if (choice.equalsIgnoreCase("N")) {
+                            continue_enrollment = false;
+                        }
+                    }
+                    j++;
+                }
             }
-            j++;
-        }
+
+            for (Course c : tempCourses) {
+                EnrollmentSystem.enroll(student, c);
+            }
     }
 
     //  3 List registered students
@@ -190,6 +205,10 @@ public class Menu {
             }
     }
 
+
+
+
+
     // 5 Update Course Status
     public static void updateCourseStatusMenu() {
         Scanner input = new Scanner(System.in);
@@ -201,13 +220,11 @@ public class Menu {
         int chosenStudent = input.nextInt();
         input.nextLine();
 
-        System.out.println("Enter course code: ");
+        System.out.print("Enter course code: ");
         String chosenCourseCode = input.nextLine();
-        input.nextLine();
 
-        System.out.println("Enter new course status: ");
+        System.out.print("Enter new course status ['CURRENT', 'FAILED', 'COMPLETED']: ");
         String chosenCourseStatus = input.nextLine();
-        input.nextLine();
 
         int j = 1;
 
@@ -218,9 +235,11 @@ public class Menu {
             }
             j++;
         }
-
-
     }
+
+
+
+
 
     // 6 See student's details
     public static void seeStudentsDetails() {
@@ -245,6 +264,12 @@ public class Menu {
             }
     }
 
+
+
+
+
+
+
     private static void listCurrentCourses(Student student) {
         System.out.println("________________________________________________________");
         System.out.println("Name: " + student.getFullName() + "   Id:" + student.getId());
@@ -268,7 +293,7 @@ public class Menu {
 
     private static void listTakenCourses(Student student) {
         System.out.println("Taken courses . . . ");
-        if (student.getCurrentCourse().isEmpty()) {
+        if (student.getCompletedCourse().isEmpty()) {
             System.out.println("      No Taken course list found.");
         } else {
         int i = 1;
@@ -481,12 +506,12 @@ public class Menu {
                 int select = sc.nextInt();
                 sc.nextLine();
                 if (select < 1 || select > options) {
-                    System.out.println("Invalid choice, please choose between 1 - " + options + ".");
+                    System.out.print("Invalid choice, please choose between 1 - " + options + ": ");
                     continue;
                 }
                 return select;
             } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please, use numbers.");
+                System.out.print("Invalid input. Please, use numbers: ");
                 sc.nextLine();
             }
         }
