@@ -30,14 +30,46 @@ public class DatabaseManager {
                 );
                 """;
 
+        String createPaymentsTable = """
+                CREATE TABLE IF NOT EXISTS Payments (
+                    transaction_id VARCHAR(50) UNIQUE NOT NULL,
+                    student_id INT UNIQUE NOT NULL,
+                    payment_date  DATETIME NOT NULL,
+                    amount DECIMAL(6,2) NOT NULL,
+                    FOREIGN KEY (student_id) REFERENCES Students(student_id) ON DELETE PROTECT
+                );
+                """;
+
         try (Connection connection = DriverManager.getConnection(URL, USER, PASS);
              Statement stmt = connection.createStatement()) {
 
             stmt.execute(createEnrollmentTable);
             stmt.execute(createPrerequisiteTable);
+            stmt.execute(createPaymentsTable);
 
         } catch (SQLException e) {
             System.out.println("❌ There is Database Initialization Error: " + e.getMessage());
+        }
+    }
+
+    public static void loadPayments() {
+        String sql = "SELECT transaction_id, student_id, payment_date, amount FROM Payments";
+
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement pst = connection.prepareStatement(sql);
+             ResultSet rs = pst.executeQuery()) {
+
+            while (rs.next()) {
+                String transaction_id = rs.getString("transaction_id");
+                int student_id = rs.getInt("student_id");
+                java.util.Date paymentDate = rs.getTimestamp("payment_date");
+                double amount = rs.getDouble("amount");
+
+                Payment new_payment = new Payment(transaction_id, student_id, paymentDate, amount);
+                Payment.addPaymentData(new_payment);
+            }
+        } catch (SQLException e) {
+            System.out.println("❌ Error loading payments: " + e.getMessage());
         }
     }
 
@@ -59,7 +91,7 @@ public class DatabaseManager {
 
                 if (mainCourse != null && prereqCourse != null) {
                     // Assuming your Course class has a method to add a prerequisite object
-                    mainCourse.getPrerequisites().add(prereqCourse);
+                    mainCourse.addPrerequisite(prereqCourse);
                 }
             }
         } catch (SQLException e) {
@@ -74,6 +106,25 @@ public class DatabaseManager {
                 .findFirst()
                 .orElse(null);
     }
+
+
+    public static void savePrerequisites(Course course, Course prerequisite){
+        String sql = "INSERT INTO Prerequisites (course_code, prereq_course_code) VALUES (?, ?)";
+
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement pst = connection.prepareStatement(sql)) {
+
+            pst.setString(1, course.getCourseCode());
+            pst.setString(2, prerequisite.getCourseCode());
+            pst.executeUpdate();
+
+            System.out.println("Prerequisite course saved in the database, successfully!");
+
+        } catch (SQLException e) {
+            System.out.println("❌ There is Database Error on saving Prerequisite: " + e.getMessage());
+        }
+    }
+
 
 
     public static void loadStudentEnrollments() {

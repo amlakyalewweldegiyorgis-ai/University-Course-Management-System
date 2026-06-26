@@ -430,6 +430,7 @@ public class Menu {
             if (j == selectedCourse) {
                 Course course = addCourse();
                 c.addPrerequisite(course);
+                DatabaseManager.savePrerequisites(c,course);
                 System.out.println("\uD83C\uDF89 Adding prerequisite for selected course '" + c.getCourseName() + "' is done, successfully!");
                 break;
             }
@@ -447,14 +448,14 @@ public class Menu {
         System.out.print("Choose the course you want to see prerequisite for (Use Number): ");
         int selectedCourse = input.nextInt();
 
-        System.out.println(selectedCourse + " is choosen . . . ");
+        System.out.println(selectedCourse + " is chosen . . . ");
         int j = 1;
 
         for (Course c :  EnrollmentSystem.availableCourses) {
             if (j == selectedCourse) {
                 if (!c.getPrerequisites().isEmpty()) {
                     System.out.println("#Showing list of prerequisite for course '" + c.getCourseName() + "'");
-                    System.out.println("Name       Code         Fee");
+                    System.out.printf("  %-20s %-12s %-8s%n", "Name", "Code", "Fee");
                     for (Course course : c.getPrerequisites()) {
                         System.out.println(course.toString());
                     }

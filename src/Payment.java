@@ -1,19 +1,26 @@
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Payment implements java.io.Serializable {
-    public String studentName;
-    public LocalDate date;
+    public int studentId;
+    public Date date;
     public double amount;
     public String transactionId;
     public static List<Payment> payments = new ArrayList<>();
 
     // Payment Constructor: For payment slip generation
-    public Payment(String transactionId, String studentName, double amount) {
+    public Payment(String transactionId, int studentId, double amount) {
         this.transactionId = transactionId;
-        this.studentName = studentName;
-        this.date = LocalDate.now();
+        this.studentId = studentId;
+        this.date = new Date();
+        this.amount = amount;
+    }
+
+    public Payment(String transactionId, int studentId, Date date, double amount) {
+        this.transactionId = transactionId;
+        this.studentId = studentId;
+        this.date = date;
         this.amount = amount;
     }
 
@@ -22,13 +29,8 @@ public class Payment implements java.io.Serializable {
         return transactionId != null && transactionId.length() > 5;
     }
 
-    // Getter
-    public String getStudentName() {
-        return studentName;
-    }
-
-    // Setter
-    public void setStudentName(String studentName) {
-        this.studentName = studentName;
+    public static void addPaymentData(Payment payment) {
+        payments.clear();
+        payments.add(payment);
     }
 }
