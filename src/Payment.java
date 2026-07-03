@@ -17,6 +17,7 @@ public class Payment implements java.io.Serializable {
         this.amount = amount;
     }
 
+    // Payment Constructor: For loading data from DB
     public Payment(String transactionId, int studentId, Date date, double amount) {
         this.transactionId = transactionId;
         this.studentId = studentId;
@@ -33,4 +34,23 @@ public class Payment implements java.io.Serializable {
         payments.clear();
         payments.add(payment);
     }
+
+    // Getters
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public int getStudentId() {
+        return studentId;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
 }

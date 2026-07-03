@@ -12,6 +12,7 @@ public class Main{
         DatabaseManager.loadCourses();
         DatabaseManager.loadPrerequisites();
         DatabaseManager.loadStudentEnrollments();
+        DatabaseManager.loadPayments();
 
 //    -----------------------------------------
 
@@ -65,12 +66,15 @@ public class Main{
                     Menu.listData(EnrollmentSystem.availableCourses, "#Available Courses . . . ", header, "No registered courses are found, please register.");
                 }
             } else if (choice == 3) {
+                int innerChoice = Menu.managePaymentsMenu();
 
-//        Saving data to the files b4 leaving the system
-                FileManager.saveToFile(EnrollmentSystem.availableCourses, "Courses.dat");
-                FileManager.saveToFile(EnrollmentSystem.registeredStudents, "Students.dat");
-                FileManager.saveToFile(Payment.payments, "Payments.dat");
+                if (innerChoice == 1) {
+                    String header = String.format("    %-4s %-21s %-13s %-9s", "No.", "Course Name", "Code", "Fee");
+                    Menu.listData(EnrollmentSystem.availableCourses, "#Available Courses . . . ", header, "No registered courses are found, please register.");
 
+                    Menu.listPaymentSlips();
+                }
+            } else if (choice == 4) {
                 System.out.println("\uD83D\uDDA5 Exiting the system, Thank you for using . . . ");
                 break;
             }

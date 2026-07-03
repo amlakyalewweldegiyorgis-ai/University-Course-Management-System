@@ -83,8 +83,9 @@ public class EnrollmentSystem {
             String transactionId = input.nextLine();
 
             if (Payment.isValidTransactionId(transactionId)) {
-                Payment studentSlip = new Payment(transactionId, student.getFullName(), totalFee());
+                Payment studentSlip = new Payment(transactionId, student.getId(), totalFee());
                 Payment.payments.add(studentSlip);
+                DatabaseManager.savePayment(studentSlip);
 
                 for (Course c : selectedCourses) {
                     student.addCurrentCourses(c);

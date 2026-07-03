@@ -36,7 +36,7 @@ public class DatabaseManager {
                     student_id INT UNIQUE NOT NULL,
                     payment_date  DATETIME NOT NULL,
                     amount DECIMAL(6,2) NOT NULL,
-                    FOREIGN KEY (student_id) REFERENCES Students(student_id) ON DELETE PROTECT
+                    FOREIGN KEY (student_id) REFERENCES Students(student_id)
                 );
                 """;
 
@@ -52,6 +52,27 @@ public class DatabaseManager {
         }
     }
 
+//  Payments  --------------------------------------------------------------------------------------------------
+
+    public static void savePayment(Payment payment){
+        String sql = "INSERT INTO Payments (transaction_id, student_id, payment_date, amount) VALUES (?, ?, ?, ?)";
+
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement pst = connection.prepareStatement(sql)) {
+
+            pst.setString(1, payment.getTransactionId());
+            pst.setInt(2, payment.getStudentId());
+            pst.setDate(3, new java.sql.Date(payment.getDate().getTime()));
+            pst.setDouble(4, payment.getAmount());
+            pst.executeUpdate();
+
+            System.out.println("Payment info saved in the database, successfully!");
+
+        } catch (SQLException e) {
+            System.out.println("❌ There is Database Error on saving this Payment info: " + e.getMessage());
+        }
+    }
+
     public static void loadPayments() {
         String sql = "SELECT transaction_id, student_id, payment_date, amount FROM Payments";
 
@@ -62,10 +83,10 @@ public class DatabaseManager {
             while (rs.next()) {
                 String transaction_id = rs.getString("transaction_id");
                 int student_id = rs.getInt("student_id");
-                java.util.Date paymentDate = rs.getTimestamp("payment_date");
+                java.util.Date payment_date = rs.getTimestamp("payment_date");
                 double amount = rs.getDouble("amount");
 
-                Payment new_payment = new Payment(transaction_id, student_id, paymentDate, amount);
+                Payment new_payment = new Payment(transaction_id, student_id, payment_date, amount);
                 Payment.addPaymentData(new_payment);
             }
         } catch (SQLException e) {
@@ -73,6 +94,8 @@ public class DatabaseManager {
         }
     }
 
+
+//  Payments End --------------------------------------------------------------------------------------------------
 
     public static void loadPrerequisites() {
         String sql = "SELECT course_code, prereq_course_code FROM Prerequisites";
