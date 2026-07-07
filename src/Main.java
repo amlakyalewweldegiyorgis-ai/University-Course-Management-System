@@ -4,7 +4,6 @@ public class Main{
 
         // Initialize DB
         DatabaseManager.initializeHelperTables();
-        DatabaseManager.initializeTableStudentOnDatabase();
         DatabaseManager.initializeTableCourseOnDatabase();
 
         // Load from DB
@@ -69,10 +68,8 @@ public class Main{
                 int innerChoice = Menu.managePaymentsMenu();
 
                 if (innerChoice == 1) {
-                    String header = String.format("    %-4s %-21s %-13s %-9s", "No.", "Course Name", "Code", "Fee");
-                    Menu.listData(EnrollmentSystem.availableCourses, "#Available Courses . . . ", header, "No registered courses are found, please register.");
-
-                    Menu.listPaymentSlips();
+                    String header = String.format("    %-4s %-21s %-13s %-30s %-9s", "No.", "Transaction Id", "Payer", "Date", "Amount");
+                    Menu.listData(Payment.payments, "#Payment Slips . . . ", header, "No registered slips are found, please register.");;
                 }
             } else if (choice == 4) {
                 System.out.println("\uD83D\uDDA5 Exiting the system, Thank you for using . . . ");

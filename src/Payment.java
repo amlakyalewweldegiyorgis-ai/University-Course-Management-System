@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class Payment implements java.io.Serializable {
     public int studentId;
@@ -25,13 +26,22 @@ public class Payment implements java.io.Serializable {
         this.amount = amount;
     }
 
+    private static boolean checkTransactionIdDuplication(String transactionId) {
+        for (Payment payment : Payment.payments){
+            if (Objects.equals(payment.getTransactionId(), transactionId)){
+                return false;
+            } else if (!transactionId.startsWith("GORP-")) {
+                return false;
+            }
+        } return true;
+    }
+
     // Helper method to validate the Transaction ID
     public static boolean isValidTransactionId(String transactionId) {
-        return transactionId != null && transactionId.length() > 5;
+        return transactionId != null && transactionId.length() > 5 && checkTransactionIdDuplication(transactionId);
     }
 
     public static void addPaymentData(Payment payment) {
-        payments.clear();
         payments.add(payment);
     }
 
@@ -51,6 +61,10 @@ public class Payment implements java.io.Serializable {
 
     public double getAmount() {
         return amount;
+    }
+
+    public String toString() {
+        return String.format("  %-20s  %-12s  %-29s  %-8s", this.getTransactionId(), this.getStudentId(), this.getDate(), this.getAmount());
     }
 
 }

@@ -75,8 +75,8 @@ public class EnrollmentSystem {
         Scanner input = new Scanner(System.in);
 
         if (!selectedCourses.isEmpty()) {
-            System.out.println("Total fee is: " + totalFee());
-            System.out.println("Pay using this address => GORP-International-Bank: 12345BA-26-PL");
+            System.out.println("\uD83E\uDE99 Total fee is: " + totalFee());
+            System.out.println("\uD83C\uDFE6 Pay using this address => GORP-International-Bank: 12345BA-26-PL");
 
             System.out.println("----------- Confirming Payment ----------- ");
             System.out.print("Enter TransactionID: ");
@@ -105,7 +105,8 @@ public class EnrollmentSystem {
                 System.out.println();
                 selectedCourses.clear();
             } else {
-                System.out.println("Please, enter a valid transaction Id.");
+                selectedCourses.clear();
+                System.out.println("Invalid Transaction ID. Please, enter a valid transaction Id.");
             }
         } else {
             System.out.println("You haven't select any course, please select from available courses.");

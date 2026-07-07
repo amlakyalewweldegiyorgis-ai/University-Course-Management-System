@@ -7,7 +7,16 @@ public class DatabaseManager {
 
 
     public static void initializeHelperTables() {
-//        -- Join table for Enrollments (Both current and completed)
+        String createStudentsTable = """
+            CREATE TABLE IF NOT EXISTS Students (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                full_name VARCHAR(100) NOT NULL,
+                student_id INT UNIQUE NOT NULL,
+                gender VARCHAR(10) NOT NULL
+            );
+        """;
+
+
         String createEnrollmentTable = """
                 CREATE TABLE IF NOT EXISTS Enrollments (
                     student_id VARCHAR(50),
@@ -32,8 +41,8 @@ public class DatabaseManager {
 
         String createPaymentsTable = """
                 CREATE TABLE IF NOT EXISTS Payments (
-                    transaction_id VARCHAR(50) UNIQUE NOT NULL,
-                    student_id INT UNIQUE NOT NULL,
+                    transaction_id VARCHAR(50) UNIQUE NOT NULL PRIMARY KEY,
+                    student_id INT NOT NULL,
                     payment_date  DATETIME NOT NULL,
                     amount DECIMAL(6,2) NOT NULL,
                     FOREIGN KEY (student_id) REFERENCES Students(student_id)
@@ -46,6 +55,7 @@ public class DatabaseManager {
             stmt.execute(createEnrollmentTable);
             stmt.execute(createPrerequisiteTable);
             stmt.execute(createPaymentsTable);
+            stmt.execute(createStudentsTable);
 
         } catch (SQLException e) {
             System.out.println("❌ There is Database Initialization Error: " + e.getMessage());
@@ -65,9 +75,6 @@ public class DatabaseManager {
             pst.setDate(3, new java.sql.Date(payment.getDate().getTime()));
             pst.setDouble(4, payment.getAmount());
             pst.executeUpdate();
-
-            System.out.println("Payment info saved in the database, successfully!");
-
         } catch (SQLException e) {
             System.out.println("❌ There is Database Error on saving this Payment info: " + e.getMessage());
         }
@@ -97,6 +104,8 @@ public class DatabaseManager {
 
 //  Payments End --------------------------------------------------------------------------------------------------
 
+
+//  Prerequisite Start --------------------------------------------------------------------------------------------------
     public static void loadPrerequisites() {
         String sql = "SELECT course_code, prereq_course_code FROM Prerequisites";
 
@@ -147,8 +156,10 @@ public class DatabaseManager {
             System.out.println("❌ There is Database Error on saving Prerequisite: " + e.getMessage());
         }
     }
+//  Prerequisite End --------------------------------------------------------------------------------------------------
 
 
+//  Enrollments Database Start --------------------------------------------------------------------------------------------------
 
     public static void loadStudentEnrollments() {
         String sql = "SELECT student_id, course_code, status FROM Enrollments";
@@ -178,33 +189,35 @@ public class DatabaseManager {
         }
     }
 
-    // Helper to look up a student from memory using an int ID
-    private static Student findStudentById(int id) {
-        return EnrollmentSystem.registeredStudents.stream()
-                .filter(s -> s.getId() == id) // Direct integer comparison
-                .findFirst()
-                .orElse(null);
-    }
-
-
-    public static void initializeTableStudentOnDatabase() {
-        String createStudentsTable = """
-            CREATE TABLE IF NOT EXISTS Students (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                full_name VARCHAR(100) NOT NULL,
-                student_id INT UNIQUE NOT NULL,
-                gender VARCHAR(10) NOT NULL
-            );
-        """;
+    public static void saveEnrollment(int studentId, String courseCode, String status) {
+        String sql = "INSERT INTO Enrollments (student_id, course_code, status) VALUES (?, ?, ?)";
 
         try (Connection connection = DriverManager.getConnection(URL, USER, PASS);
-             Statement stmt = connection.createStatement()) {
+             PreparedStatement pst = connection.prepareStatement(sql)) {
 
-            stmt.execute(createStudentsTable);
+            pst.setInt(1, studentId);
+            pst.setString(2, courseCode);
+            pst.setString(3, status.toUpperCase());
+            pst.executeUpdate();
+
+            System.out.println("💾 Enrollment saved to database successfully.");
 
         } catch (SQLException e) {
-            System.out.println("❌ There is Database Initialization Error: " + e.getMessage());
+            System.out.println("❌ Database Error on saving enrollment: " + e.getMessage());
         }
+    }
+
+//  Enrollments Database End --------------------------------------------------------------------------------------------------
+
+
+//  Student Start --------------------------------------------------------------------------------------------------
+
+    // Helper to find a student from memory using their ID
+    private static Student findStudentById(int id) {
+        return EnrollmentSystem.registeredStudents.stream()
+                .filter(s -> s.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 
 
@@ -273,9 +286,9 @@ public class DatabaseManager {
             return false;
         }
     }
+//  Student Database End --------------------------------------------------------------------------------------------------
 
-
-//    Courses Database
+//  Courses Database Start --------------------------------------------------------------------------------------------------
 
     public static void initializeTableCourseOnDatabase() {
         String createCoursesTable = """
@@ -340,27 +353,6 @@ public class DatabaseManager {
         }
     }
 
-    public static void saveEnrollment(int studentId, String courseCode, String status) {
-        String sql = "INSERT INTO Enrollments (student_id, course_code, status) VALUES (?, ?, ?)";
-
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASS);
-             PreparedStatement pst = connection.prepareStatement(sql)) {
-
-            pst.setInt(1, studentId);
-            pst.setString(2, courseCode);
-            pst.setString(3, status.toUpperCase());
-            pst.executeUpdate();
-
-            System.out.println("💾 Enrollment saved to database successfully.");
-
-        } catch (SQLException e) {
-            System.out.println("❌ Database Error on saving enrollment: " + e.getMessage());
-        }
-    }
-
-
-
-
     public static void updateCourseStatus(int studentId, String courseCode, String newStatus) {
         String sql = "UPDATE Enrollments SET status = ? WHERE student_id = ? AND course_code = ?";
 
@@ -408,4 +400,7 @@ public class DatabaseManager {
             }
         }
     }
+
+//  Course Database End --------------------------------------------------------------------------------------------------
+
 }
