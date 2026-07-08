@@ -15,7 +15,8 @@ public class Main{
 
 //    -----------------------------------------
 
-        System.out.println("\uD83D\uDDC3\uFE0F Welcome to University Course Management System \uD83D\uDDC3\uFE0F");
+        System.out.println();
+        System.out.println("     \uD83D\uDDC3\uFE0F Welcome to University Course Management System \uD83D\uDDC3\uFE0F");
 
         while (true) {
             int choice = Menu.mainMenu();
@@ -68,7 +69,7 @@ public class Main{
                 int innerChoice = Menu.managePaymentsMenu();
 
                 if (innerChoice == 1) {
-                    String header = String.format("    %-4s %-21s %-13s %-30s %-9s", "No.", "Transaction Id", "Payer", "Date", "Amount");
+                    String header = String.format("    %-4s %-21s %-20s %-30s %-9s", "No.", "Transaction Id", "Payer", "Date", "Amount");
                     Menu.listData(Payment.payments, "#Payment Slips . . . ", header, "No registered slips are found, please register.");;
                 }
             } else if (choice == 4) {
@@ -76,12 +77,5 @@ public class Main{
                 break;
             }
         }
-
-//    Homework:
-//    1. Fix duplicate registration.
-//    2. Only display if there is an error while saving the file.
-//    3. Arrange the methods in order and using comments.
-//       . File Manager, Student, Course, Payment, EnrollmentSystem,
-//    4. Connect to the Database.
     }
 }

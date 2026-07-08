@@ -46,12 +46,12 @@ public class EnrollmentSystem {
                 System.out.println("The student has already registered for " +  course + "course, please select another course.");
             }
         } else {
-            System.out.print("Sorry, you can't enroll for this " +  course + " course, prerequisite is not matched.\n");
+            System.out.print("Sorry, you can't enroll for this " +  course.getCourseName() +  "  " + course.getCourseCode() + " course,\n prerequisite is not matched.\n");
             System.out.println(course.getPrerequisites());
         }
     }
 
-    // Helper to check for duplicate registration : Ch Not!
+    // Helper to check for duplicate registration
     private static boolean checkCourseRegistered(Student student, Course course) {
         for (Course c : student.getCurrentCourse()){
             if (Objects.equals(c.getCourseCode(), course.getCourseCode())){

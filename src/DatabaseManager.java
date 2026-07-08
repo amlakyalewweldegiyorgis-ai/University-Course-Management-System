@@ -42,10 +42,10 @@ public class DatabaseManager {
         String createPaymentsTable = """
                 CREATE TABLE IF NOT EXISTS Payments (
                     transaction_id VARCHAR(50) UNIQUE NOT NULL PRIMARY KEY,
-                    student_id INT NOT NULL,
+                    student_id INT,
                     payment_date  DATETIME NOT NULL,
                     amount DECIMAL(6,2) NOT NULL,
-                    FOREIGN KEY (student_id) REFERENCES Students(student_id)
+                    FOREIGN KEY (student_id) REFERENCES Students(student_id) ON DELETE SET NULL
                 );
                 """;
 
@@ -89,7 +89,8 @@ public class DatabaseManager {
 
             while (rs.next()) {
                 String transaction_id = rs.getString("transaction_id");
-                int student_id = rs.getInt("student_id");
+                Integer student_id_obj = (Integer) rs.getObject("student_id");
+                int student_id = (student_id_obj != null) ? student_id_obj : -1;
                 java.util.Date payment_date = rs.getTimestamp("payment_date");
                 double amount = rs.getDouble("amount");
 

@@ -64,7 +64,10 @@ public class Payment implements java.io.Serializable {
     }
 
     public String toString() {
-        return String.format("  %-20s  %-12s  %-29s  %-8s", this.getTransactionId(), this.getStudentId(), this.getDate(), this.getAmount());
+        if (this.studentId == -1) {
+            return String.format("  %-20s  %-19s  %-29s  %-8s", this.getTransactionId(), "DELETED STUDENT", this.getDate(), this.getAmount());
+        }
+        return String.format("  %-20s  %-19s  %-29s  %-8s", this.getTransactionId(), this.getStudentId(), this.getDate(), this.getAmount());
     }
 
 }

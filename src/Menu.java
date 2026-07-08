@@ -22,7 +22,7 @@ public class Menu {
     //    --------------------------------------------------------------------------------------------
     // Students Management Menu:
     public static int manageStudentsMenu() {
-        System.out.println("*** ------------------ Managing Students ------------------ ***");
+        System.out.println("\uD83D\uDC68\u200D\uD83C\uDF93 ------------------ Managing Students ------------------ \uD83D\uDC69\u200D\uD83C\uDF93");
         System.out.println("    1. Register new student");
         System.out.println("    2. Enroll student");
         System.out.println("    3. List registered students");
@@ -198,7 +198,7 @@ public class Menu {
                 if (j == chosenStudent) {
                     EnrollmentSystem.registeredStudents.remove(student);
                     DatabaseManager.removeStudentFromDatabase(student.getId());
-                    System.out.println("\uD83C\uDF89 Chosen student '" + j + "' has been removed, successfully!");
+                    System.out.println("\uD83D\uDFE2 Chosen student '" + j + "' has been removed, successfully!");
                     break;
                 }
                 j++;
