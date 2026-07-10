@@ -1,8 +1,23 @@
-### IntelliJ IDEA ###
+# H2 Database files (Security Priority)
+*.mv.db
+*.trace.db
+data/
+db/
+
+# Compiles & Bytecode
+*.class
 out/
+target/
+bin/
+
+### IntelliJ IDEA ###
+.idea/
+.kotlin
 !**/src/main/**/out/
 !**/src/test/**/out/
-.kotlin
+
+### VS Code ###
+.vscode/
 
 ### Eclipse ###
 .apt_generated
@@ -12,7 +27,6 @@ out/
 .settings
 .springBeans
 .sts4-cache
-bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
@@ -23,8 +37,6 @@ bin/
 /nbdist/
 /.nb-gradle/
 
-### VS Code ###
-.vscode/
-
-### Mac OS ###
+### Operating System ###
 .DS_Store
+Thumbs.db
