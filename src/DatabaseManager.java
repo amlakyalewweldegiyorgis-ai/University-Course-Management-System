@@ -7,6 +7,7 @@ public class DatabaseManager {
 
 
     public static void initializeHelperTables() {
+        // Step 1: Ensure Core Independent Tables are created first
         String createStudentsTable = """
             CREATE TABLE IF NOT EXISTS Students (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -16,19 +17,27 @@ public class DatabaseManager {
             );
         """;
 
+        String createCoursesTable = """
+            CREATE TABLE IF NOT EXISTS Courses (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                course_name VARCHAR(100) NOT NULL,
+                course_code VARCHAR(50) UNIQUE NOT NULL,
+                course_fee DECIMAL(7,2) NOT NULL
+            );
+        """;
 
+        // Step 2: Dependent Tables built safely afterward
         String createEnrollmentTable = """
                 CREATE TABLE IF NOT EXISTS Enrollments (
-                    student_id VARCHAR(50),
+                    student_id INT, -- Fix: Type matched to INT
                     course_code VARCHAR(50),
-                    status VARCHAR(20) NOT NULL, -- 'CURRENT' or 'COMPLETED'
+                    status VARCHAR(20) NOT NULL,
                     PRIMARY KEY (student_id, course_code),
                     FOREIGN KEY (student_id) REFERENCES Students(student_id) ON DELETE CASCADE,
                     FOREIGN KEY (course_code) REFERENCES Courses(course_code) ON DELETE CASCADE
                 );
                 """;
 
-//        -- Join table for Course Prerequisites
         String createPrerequisiteTable = """
                 CREATE TABLE IF NOT EXISTS Prerequisites (
                     course_code VARCHAR(50),
@@ -52,10 +61,12 @@ public class DatabaseManager {
         try (Connection connection = DriverManager.getConnection(URL, USER, PASS);
              Statement stmt = connection.createStatement()) {
 
+            // Execute in order of relational hierarchy
+            stmt.execute(createStudentsTable);
+            stmt.execute(createCoursesTable);
             stmt.execute(createEnrollmentTable);
             stmt.execute(createPrerequisiteTable);
             stmt.execute(createPaymentsTable);
-            stmt.execute(createStudentsTable);
 
         } catch (SQLException e) {
             System.out.println("❌ There is Database Initialization Error: " + e.getMessage());
@@ -72,7 +83,7 @@ public class DatabaseManager {
 
             pst.setString(1, payment.getTransactionId());
             pst.setInt(2, payment.getStudentId());
-            pst.setDate(3, new java.sql.Date(payment.getDate().getTime()));
+            pst.setTimestamp(3, new java.sql.Timestamp(payment.getDate().getTime()));
             pst.setDouble(4, payment.getAmount());
             pst.executeUpdate();
         } catch (SQLException e) {
@@ -290,26 +301,6 @@ public class DatabaseManager {
 //  Student Database End --------------------------------------------------------------------------------------------------
 
 //  Courses Database Start --------------------------------------------------------------------------------------------------
-
-    public static void initializeTableCourseOnDatabase() {
-        String createCoursesTable = """
-            CREATE TABLE IF NOT EXISTS Courses (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                course_name VARCHAR(100) NOT NULL,
-                course_code VARCHAR(50) UNIQUE NOT NULL,
-                course_fee DECIMAL(7,2) NOT NULL
-            );
-        """;
-
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASS);
-             Statement stmt = connection.createStatement()) {
-
-            stmt.execute(createCoursesTable);
-
-        } catch (SQLException e) {
-            System.out.println("❌ There is Database Initialization Error: " + e.getMessage());
-        }
-    }
 
     public static void saveCourse(Course course){
         String sql = "INSERT INTO Courses (course_name, course_code, course_fee) VALUES (?, ?, ?)";

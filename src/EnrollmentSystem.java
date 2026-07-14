@@ -22,18 +22,22 @@ public class EnrollmentSystem {
     private static boolean checkPrerequisites(Student student, Course course) {
         List<Course> completedCourses = student.getCompletedCourse();
 
-        if (availableCourses.contains(course)) {
-            if (course.getPrerequisites().isEmpty()) {
-                return true;
-            }
+        boolean exists = availableCourses.stream()
+                .anyMatch(c -> c.getCourseCode().equalsIgnoreCase(course.getCourseCode()));
+        if (!exists) return false;
 
-            for (Course c : course.getPrerequisites()) {
-                if (!completedCourses.contains(c)) {
-                    return false;
-                }
-            } return true;
+        if (course.getPrerequisites().isEmpty()) {
+            return true;
         }
-        return false;
+
+        for (Course prereq : course.getPrerequisites()) {
+            boolean completed = completedCourses.stream()
+                    .anyMatch(c -> c.getCourseCode().equalsIgnoreCase(prereq.getCourseCode()));
+            if (!completed) {
+                return false;
+            }
+        }
+        return true;
     }
 
     // Day 09: Enrollment method
@@ -53,11 +57,12 @@ public class EnrollmentSystem {
 
     // Helper to check for duplicate registration
     private static boolean checkCourseRegistered(Student student, Course course) {
-        for (Course c : student.getCurrentCourse()){
-            if (Objects.equals(c.getCourseCode(), course.getCourseCode())){
-                return true;
-            }
-        } return false;
+        boolean isCurrent = student.getCurrentCourse().stream()
+                .anyMatch(c -> Objects.equals(c.getCourseCode(), course.getCourseCode()));
+        boolean isCompleted = student.getCompletedCourse().stream()
+                .anyMatch(c -> Objects.equals(c.getCourseCode(), course.getCourseCode()));
+
+        return isCurrent || isCompleted;
     }
 
     // Day 10 : Fee calculation
@@ -84,7 +89,7 @@ public class EnrollmentSystem {
 
             if (Payment.isValidTransactionId(transactionId)) {
                 Payment studentSlip = new Payment(transactionId, student.getId(), totalFee());
-                Payment.payments.add(studentSlip);
+                Payment.addPaymentData(studentSlip);
                 DatabaseManager.savePayment(studentSlip);
 
                 for (Course c : selectedCourses) {

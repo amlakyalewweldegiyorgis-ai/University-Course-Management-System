@@ -4,7 +4,6 @@ public class Main{
 
         // Initialize DB
         DatabaseManager.initializeHelperTables();
-        DatabaseManager.initializeTableCourseOnDatabase();
 
         // Load from DB
         DatabaseManager.loadStudents();
@@ -14,10 +13,6 @@ public class Main{
         DatabaseManager.loadPayments();
 
 //    -----------------------------------------
-
-        System.out.println();
-        System.out.println("     \uD83D\uDDC3\uFE0F Welcome to University Course Management System \uD83D\uDDC3\uFE0F");
-
         while (true) {
             int choice = Menu.mainMenu();
 
@@ -27,7 +22,6 @@ public class Main{
 
                 if (studentChoice == 1) {
                     Menu.registerNewStudent();
-                    FileManager.saveToFile(EnrollmentSystem.registeredStudents, "Students.dat");
                 } else if (studentChoice == 2) {
                     Menu.enrollStudent();
                 } else if (studentChoice == 3) {
@@ -35,7 +29,6 @@ public class Main{
                     Menu.listData(EnrollmentSystem.registeredStudents, "#Registered Students . . .", student_list_header, "No registered students are found, please register.");
                 } else if (studentChoice == 4) {
                     Menu.removeRegisteredStudent();
-                    FileManager.saveToFile(EnrollmentSystem.registeredStudents, "Students.dat");
                 } else if (studentChoice == 5) {
                     Menu.updateCourseStatusMenu();
                 } else if (studentChoice == 6) {
@@ -49,16 +42,12 @@ public class Main{
 
                 if (innerChoice == 1) {
                     Menu.addNewCourseMenu();
-                    FileManager.saveToFile(EnrollmentSystem.availableCourses, "Courses.dat");
                 } else if (innerChoice == 2) {
                     Menu.updateExistingCourseMenu();
-                    FileManager.saveToFile(EnrollmentSystem.availableCourses, "Courses.dat");
                 } else if (innerChoice == 3) {
                     Menu.deleteExistingCourseMenu();
-                    FileManager.saveToFile(EnrollmentSystem.availableCourses, "Courses.dat");
                 } else if (innerChoice == 4) {
                     Menu.addPrerequisiteMenu();
-                    FileManager.saveToFile(EnrollmentSystem.availableCourses, "Courses.dat");
                 } else if (innerChoice == 5) {
                     Menu.showPrerequisiteMenu();
                 } else if (innerChoice == 6) {

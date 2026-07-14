@@ -45,7 +45,7 @@ public class Course implements java.io.Serializable {
 
     // Setters
     public void setPrerequisite(List<Course> prerequisite) {
-        this.prerequisite = prerequisite;
+        this.prerequisite = (prerequisite != null) ? prerequisite : new ArrayList<>();
     }
 
     public void setCourseCode(String courseCode) {

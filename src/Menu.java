@@ -8,6 +8,10 @@ public class Menu {
 
     // Main Menu
     public static int mainMenu() {
+        System.out.println();
+        System.out.println();
+        System.out.println("     \uD83D\uDDC3\uFE0F Welcome to University Course Management System \uD83D\uDDC3\uFE0F");
+
         System.out.println("\uD83D\uDCC1 _________________________________________________________ \uD83D\uDCC1");
         System.out.println("\uD83D\uDDD2\uFE0F Main Menu:");
         System.out.println("    1. Manage Students \uD83D\uDC68\u200D\uD83C\uDF93 \uD83E\uDDD1\u200D\uD83C\uDF93");
@@ -36,7 +40,6 @@ public class Menu {
 
     //  1  Registering new student:
     public static void registerNewStudent() {
-        Scanner input = new Scanner(System.in);
 
         System.out.println("*** ------------------ Registering New Student ------------------ ***");
         System.out.print("    .Enter student's full name: ");
@@ -120,14 +123,12 @@ public class Menu {
 
     // 2 Enrolling student
     public static void enrollStudent() {
-        Scanner input = new Scanner(System.in);
         System.out.println("*** ------------------ Enrolling Student ------------------ ***");
 
         String student_list_header = String.format("    %-4s %-21s %-13s %-9s", "No.", "Full Name", "Id", "Gender");
         Menu.listData(EnrollmentSystem.registeredStudents, "#Registered Students . . .", student_list_header, "No registered students are found, please register.");
             System.out.print("* Choose the student to enroll from the list: ");
-            int chosenStudent = input.nextInt();
-            input.nextLine();
+            int chosenStudent = validateNumberChoice(EnrollmentSystem.registeredStudents.size());
 
             System.out.println("Student " + chosenStudent + " is chosen . . . ");
             int j = 1;
@@ -142,8 +143,6 @@ public class Menu {
     }
 
     private static void enrollCourse(Student student) {
-            Scanner input = new Scanner(System.in);
-
             List<Course> tempCourses = new ArrayList<>();
             boolean continue_enrollment = true;
 
@@ -153,8 +152,8 @@ public class Menu {
                 String header = String.format("    %-4s %-21s %-13s %-9s", "No.", "Course Name", "Code", "Fee");
                 Menu.listData(EnrollmentSystem.availableCourses, "#Available Courses . . . ", header, "No registered courses are found, please register.");
                 System.out.print("* Select the course to enroll from the list: ");
-                int chosenCourse = input.nextInt();
-                input.nextLine();
+                int chosenCourse = sc.nextInt();
+                sc.nextLine();
 
                 System.out.println(chosenCourse + " is chosen . . . ");
                 int j = 1;
@@ -163,7 +162,7 @@ public class Menu {
                     if (j == chosenCourse) {
                         tempCourses.add(c);
                         System.out.print("Do you want to continue enrolling another course? [any key for Yes or n for No]: ");
-                        String choice = sc.nextLine();
+                        String choice = Menu.sc.nextLine();
                         if (choice.equalsIgnoreCase("N")) {
                             continue_enrollment = false;
                         }
@@ -182,27 +181,23 @@ public class Menu {
 
     //  4  Remove registered student
     public static void removeRegisteredStudent() {
-        Scanner input = new Scanner(System.in);
         System.out.println("*** ------------------ Removing Registered Student ------------------ ***");
-
         String student_list_header = String.format("    %-4s %-21s %-13s %-9s", "No.", "Full Name", "Id", "Gender");
-        Menu.listData(EnrollmentSystem.registeredStudents, "#Registered Students . . .", student_list_header, "No registered students are found, please register.");
-            System.out.print("* Choose the student to remove from the list: ");
-            int chosenStudent = input.nextInt();
-            input.nextLine();
+        Menu.listData(EnrollmentSystem.registeredStudents, "#Registered Students . . .", student_list_header, "No registered students found.");
 
-            System.out.println(chosenStudent + " is chosen . . . ");
-            int j = 1;
+        if(EnrollmentSystem.registeredStudents.isEmpty()) return;
 
-            for (Student student :  EnrollmentSystem.registeredStudents) {
-                if (j == chosenStudent) {
-                    EnrollmentSystem.registeredStudents.remove(student);
-                    DatabaseManager.removeStudentFromDatabase(student.getId());
-                    System.out.println("\uD83D\uDFE2 Chosen student '" + j + "' has been removed, successfully!");
-                    break;
-                }
-                j++;
-            }
+        System.out.print("* Choose student index to remove: ");
+        int chosenStudent = sc.nextInt();
+        sc.nextLine();
+
+        if (chosenStudent > 0 && chosenStudent <= EnrollmentSystem.registeredStudents.size()) {
+            Student student = EnrollmentSystem.registeredStudents.remove(chosenStudent - 1);
+            DatabaseManager.removeStudentFromDatabase(student.getId());
+            System.out.println("\uD83D\uDFE2 Student '" + student.getFullName() + "' has been successfully removed.");
+        } else {
+            System.out.println("❌ Invalid index selection.");
+        }
     }
 
 
@@ -211,20 +206,18 @@ public class Menu {
 
     // 5 Update Course Status
     public static void updateCourseStatusMenu() {
-        Scanner input = new Scanner(System.in);
         System.out.println("*** ------------------ Updating Course Status for Registered Student ------------------ ***");
 
         String student_list_header = String.format("    %-4s %-21s %-13s %-9s", "No.", "Full Name", "Id", "Gender");
         Menu.listData(EnrollmentSystem.registeredStudents, "#Registered Students . . .", student_list_header, "No registered students are found, please register.");
         System.out.print("* Choose the student to update course status from the list: ");
-        int chosenStudent = input.nextInt();
-        input.nextLine();
+        int chosenStudent = validateNumberChoice(EnrollmentSystem.registeredStudents.size());
 
         System.out.print("Enter course code: ");
-        String chosenCourseCode = input.nextLine();
+        String chosenCourseCode = sc.nextLine();
 
         System.out.print("Enter new course status ['CURRENT', 'FAILED', 'COMPLETED']: ");
-        String chosenCourseStatus = input.nextLine();
+        String chosenCourseStatus = sc.nextLine();
 
         int j = 1;
 
@@ -243,14 +236,12 @@ public class Menu {
 
     // 6 See student's details
     public static void seeStudentsDetails() {
-        Scanner input = new Scanner(System.in);
         System.out.println("*** ------------------ Showing Students Detail ------------------ ***");
 
         String student_list_header = String.format("    %-4s %-21s %-13s %-9s", "No.", "Full Name", "Id", "Gender");
         Menu.listData(EnrollmentSystem.registeredStudents, "#Registered Students . . .", student_list_header, "No registered students are found, please register.");
             System.out.print("* Choose the student to see more detail: ");
-            int chosenStudent = input.nextInt();
-            input.nextLine();
+            int chosenStudent = validateNumberChoice(EnrollmentSystem.registeredStudents.size());
 
             System.out.println("Student " + chosenStudent + " is chosen . . . ");
             int j = 1;
@@ -327,126 +318,126 @@ public class Menu {
 
     // Helper method to add course
     public static Course addCourse() {
-        Scanner input = new Scanner(System.in);
 
         System.out.print("    .Enter course name: ");
-        String name = input.nextLine();
+        String name = sc.nextLine();
 
         System.out.print("    .Enter course code: ");
-        String code = input.nextLine();
+        String code = sc.nextLine();
 
         System.out.print("    .Enter course fee: ");
-        double fee = input.nextDouble();
+        double fee = sc.nextDouble();
+        sc.nextLine();
 
         return new Course(name, code, fee);
     }
 
     //  1  Add new course
     public static void addNewCourseMenu() {
-
         System.out.println("*** ------------------ Adding New Course ------------------ ***");
         Course course = addCourse();
 
-        if (!EnrollmentSystem.availableCourses.contains(course)) {
+        boolean match = EnrollmentSystem.availableCourses.stream()
+                .anyMatch(c -> c.getCourseCode().equalsIgnoreCase(course.getCourseCode()));
+
+        if (!match) {
             EnrollmentSystem.availableCourses.add(course);
             DatabaseManager.saveCourse(course);
             System.out.println("\uD83C\uDF89 Course '" + course.getCourseName() + "' is added successfully!");
         } else {
-            System.out.println("Course already exists");
+            System.out.println("❌ Registration Failed: Course Code already exists.");
         }
     }
 
+
     // 2 Update existing course
     public static void updateExistingCourseMenu() {
-        Scanner input = new Scanner(System.in);
-
         String header = String.format("    %-4s %-21s %-13s %-9s", "No.", "Course Name", "Code", "Fee");
         Menu.listData(EnrollmentSystem.availableCourses, "#Available Courses . . . ", header, "No registered courses are found, please register.");
         System.out.print("* Choose the course to update from the list: ");
-        int chosenCourse = input.nextInt();
-        input.nextLine();
+        int chosenCourse = sc.nextInt();
+        sc.nextLine();
 
         System.out.println(chosenCourse + " is chosen . . . ");
+        Course c = EnrollmentSystem.availableCourses.get(chosenCourse - 1);
 
         System.out.print("    .Enter updated course name: ");
-        String name = input.nextLine();
+        String name = sc.nextLine();
 
         System.out.print("    .Enter updated course code: ");
-        String code = input.nextLine();
+        String code = sc.nextLine();
 
         System.out.print("    .Enter updated course fee: ");
-        double fee = input.nextDouble();
+        double fee = sc.nextDouble();
+        sc.nextLine();
 
-        int j = 1;
-        for (Course c :  EnrollmentSystem.availableCourses) {
-            if (j == chosenCourse) {
-                c.updateCourse(name, code, fee);
-                System.out.println("\uD83C\uDF89 Choosen course '" + j + "' is updated to '"+ c.getCourseName()+ "', successfully!");
-                break;
-            }
-            j++;
-        }
+        c.updateCourse(name, code, fee);
+        System.out.println("\uD83C\uDF89 Chosen course '" + chosenCourse + "' is updated to '"+ c.getCourseName()+ "', successfully!");
     }
 
     // 3 Delete existing course
     public static void deleteExistingCourseMenu() {
-        Scanner input = new Scanner(System.in);
         System.out.println("*** ------------------ Deleting Existing Course ------------------ ***");
 
         String header = String.format("    %-4s %-21s %-13s %-9s", "No.", "Course Name", "Code", "Fee");
         Menu.listData(EnrollmentSystem.availableCourses, "#Available Courses . . . ", header, "No registered courses are found, please register.");
-        System.out.print("* Choose the course to delete from the list: ");
-        int chosenCourse = input.nextInt();
-        input.nextLine();
 
-        System.out.println(chosenCourse + " is choosen . . . ");
-        int j = 1;
+        if (EnrollmentSystem.availableCourses.isEmpty()) return;
 
-        for (Course c :  EnrollmentSystem.availableCourses) {
-            if (j == chosenCourse) {
-                EnrollmentSystem.availableCourses.remove(c);
-                System.out.println("\uD83C\uDF89 Choosen course '" + j + "' is deleted, successfully!");
-                break;
-            }
-            j++;
+        System.out.print("* Choose the course index to delete from the list: ");
+        int chosenCourse = sc.nextInt();
+        sc.nextLine();
+
+        if (chosenCourse > 0 && chosenCourse <= EnrollmentSystem.availableCourses.size()) {
+            Course removed = EnrollmentSystem.availableCourses.remove(chosenCourse - 1);
+            System.out.println("\uD83C\uDF89 Chosen course '" + removed.getCourseName() + "' is deleted, successfully!");
+        } else {
+            System.out.println("❌ Invalid course selection index.");
         }
-        Menu.listData(EnrollmentSystem.availableCourses, "#Available Courses . . . ", header, "No registered courses are found, please register.");
     }
+
 
     // 4 Adding prerequisite
     public static void addPrerequisiteMenu() {
-        Scanner input = new Scanner(System.in);
         System.out.println("*** ------------------ Adding Prerequisite ------------------ ***");
         String header = String.format("    %-4s %-21s %-13s %-9s", "No.", "Course Name", "Code", "Fee");
-        Menu.listData(EnrollmentSystem.availableCourses, "#Available Courses . . . ", header, "No registered courses are found, please register.");
+        Menu.listData(EnrollmentSystem.availableCourses, "#Available Courses . . . ", header, "No courses registered.");
 
-        System.out.print("Choose the course you want to add prerequisite for (Use Number): ");
-        int selectedCourse = input.nextInt();
+        if(EnrollmentSystem.availableCourses.isEmpty()) return;
 
-        System.out.println(selectedCourse + " is chosen . . . ");
-        int j = 1;
+        System.out.print("Choose index of course requiring a prerequisite: ");
+        int targetIdx = sc.nextInt();
 
-        for (Course c :  EnrollmentSystem.availableCourses) {
-            if (j == selectedCourse) {
-                Course course = addCourse();
-                c.addPrerequisite(course);
-                DatabaseManager.savePrerequisites(c,course);
-                System.out.println("\uD83C\uDF89 Adding prerequisite for selected course '" + c.getCourseName() + "' is done, successfully!");
-                break;
+        System.out.print("Choose index of the required prerequisite course: ");
+        int prereqIdx = sc.nextInt();
+        sc.nextLine();
+
+        int size = EnrollmentSystem.availableCourses.size();
+        if (targetIdx > 0 && targetIdx <= size && prereqIdx > 0 && prereqIdx <= size) {
+            if (targetIdx == prereqIdx) {
+                System.out.println("❌ A course cannot be a prerequisite of itself!");
+                return;
             }
-            j++;
+            Course main = EnrollmentSystem.availableCourses.get(targetIdx - 1);
+            Course prereq = EnrollmentSystem.availableCourses.get(prereqIdx - 1);
+
+            main.addPrerequisite(prereq);
+            DatabaseManager.savePrerequisites(main, prereq);
+            System.out.println("✅ Link established: " + prereq.getCourseCode() + " must be taken before " + main.getCourseCode());
+        } else {
+            System.out.println("❌ Invalid selection limits.");
         }
     }
 
+
     // 5 Show Prerequisite
     public static void showPrerequisiteMenu() {
-        Scanner input = new Scanner(System.in);
         System.out.println("*** ------------------ Showing Prerequisite ------------------ ***");
         String header = String.format("    %-4s %-21s %-13s %-9s", "No.", "Course Name", "Code", "Fee");
         Menu.listData(EnrollmentSystem.availableCourses, "#Available Courses . . . ", header, "No registered courses are found, please register.");
 
         System.out.print("Choose the course you want to see prerequisite for (Use Number): ");
-        int selectedCourse = input.nextInt();
+        int selectedCourse = validateNumberChoice(EnrollmentSystem.availableCourses.size());
 
         System.out.println(selectedCourse + " is chosen . . . ");
         int j = 1;

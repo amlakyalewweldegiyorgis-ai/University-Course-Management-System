@@ -26,19 +26,21 @@ public class Payment implements java.io.Serializable {
         this.amount = amount;
     }
 
-    private static boolean checkTransactionIdDuplication(String transactionId) {
-        for (Payment payment : Payment.payments){
-            if (Objects.equals(payment.getTransactionId(), transactionId)){
-                return false;
-            } else if (!transactionId.startsWith("GORP-")) {
-                return false;
+    private static boolean isIdDuplicate(String transactionId) {
+        for (Payment payment : Payment.payments) {
+            if (Objects.equals(payment.getTransactionId(), transactionId)) {
+                return true; // Found a duplicate
             }
-        } return true;
+        }
+        return false;
     }
 
-    // Helper method to validate the Transaction ID
+    // Helper method to validate the Transaction Id
     public static boolean isValidTransactionId(String transactionId) {
-        return transactionId != null && transactionId.length() > 5 && checkTransactionIdDuplication(transactionId);
+        if (transactionId == null || !transactionId.startsWith("GORP-") || transactionId.length() <= 5) {
+            return false;
+        }
+        return !isIdDuplicate(transactionId);
     }
 
     public static void addPaymentData(Payment payment) {

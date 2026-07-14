@@ -2,11 +2,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Student implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
+
     private String fullName;
     private int id;
     private String gender;
     private List<Course> completedCourses;
-    private List<Course> currentCourse;
+    private List<Course> currentCourses;
 
     // Student constructor
     public Student(String fullName, int id,  String gender) {
@@ -14,12 +16,12 @@ public class Student implements java.io.Serializable {
         this.id = id;
         this.gender = gender;
         this.completedCourses = new ArrayList<>();
-        this.currentCourse = new ArrayList<>();
+        this.currentCourses = new ArrayList<>();
     }
 
     // To string
     public String toString() {
-        return String.format("  %-20s  %-12s    %-8s", this.getFullName(), this.getId(), this.getGender());
+        return String.format("  %-20s  %-12d    %-8s", this.getFullName(), this.getId(), this.getGender());
     }
 
     //    Getters
@@ -27,8 +29,9 @@ public class Student implements java.io.Serializable {
         return this.fullName;
     }
 
+
     public List<Course> getCurrentCourse() {
-        return this.currentCourse;
+        return this.currentCourses;
     }
 
     public List<Course> getCompletedCourse() {
@@ -45,11 +48,11 @@ public class Student implements java.io.Serializable {
 
     //    Setters
     public void setCompletedCourses(List<Course> completedCourses) {
-        this.completedCourses = completedCourses;
+        this.completedCourses = (completedCourses != null) ? new ArrayList<>(completedCourses) : new ArrayList<>();
     }
 
     public void setCurrentCourse(List<Course> currentCourse) {
-        this.currentCourse = currentCourse;
+        this.currentCourses = currentCourse;
     }
 
     public void setFullName(String fullName) {
@@ -70,7 +73,7 @@ public class Student implements java.io.Serializable {
     }
 
     public void addCurrentCourses(Course course) {
-        this.currentCourse.add(course);
+        this.currentCourses.add(course);
     }
 
 }
